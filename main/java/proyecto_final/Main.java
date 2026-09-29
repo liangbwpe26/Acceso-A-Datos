@@ -6,10 +6,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
-        List<Alumno> lista_alumnos = new ArrayList<>();
-        String opcion = "";
+        GestorAlumnos gestor = new GestorAlumnos();
         Scanner scanner = new Scanner(System.in);
+        String opcion = "";
 
         do {
             System.out.println("===============================");
@@ -28,18 +27,7 @@ public class Main {
 
             switch (opcion) {
                 case "1": {
-                    String nombre = "";
-                    boolean nombreValido = false;
-                    do {
-                        System.out.print("Introduce el nombre del alumno: ");
-                        nombre = scanner.nextLine().trim();
-
-                        if (!nombre.isEmpty() && nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
-                            nombreValido = true;
-                        } else {
-                            System.out.println("Error: El nombre solo puede contener letras y no debe estar vacío.");
-                        }
-                    } while (!nombreValido);
+                    String nombre = validarNombre(scanner);
 
                     int edad = 0;
                     boolean edadValida = false;
@@ -73,42 +61,66 @@ public class Main {
                         }
                     } while (!notaValida);
 
-                    try {
-                        Alumno alumno = new Alumno(nombre, edad, nota);
-                        lista_alumnos.add(alumno);
-                        System.out.println("Alumno añadido correctamente.");
-
-                    } catch (NumberFormatException e) {
-                        System.out.println("Error: La edad debe ser un número entero y la nota un número válido.");
-                    } catch (Exception e) {
-                        System.out.println("Ocurrió un error inesperado al registrar el alumno.");
-                    }
+                    Alumno nuevoAlumno = new Alumno(nombre, edad, nota);
+                    gestor.agregarAlumno(nuevoAlumno);
+                    System.out.println("Alumno añadido correctamente.");
                     break;
                 }
                 case "2": {
-                    if (lista_alumnos.isEmpty()) {
+                    List<Alumno> alumnos = gestor.getTodosLosAlumnos();
+                    if (alumnos.isEmpty()) {
                         System.out.println("No hay alumnos registrados.");
                     } else {
-                        System.out.println("--- Lista de alumnos ---");
-                        for (Alumno alumno : lista_alumnos) {
-                            System.out.println(alumno);
+                        for (Alumno a : alumnos) {
+                            System.out.println(a);
                         }
                     }
                     break;
                 }
                 case "3": {
+                    String nombre = validarNombre(scanner);
+                    List<Alumno> encontrados = gestor.buscarPorNombre(nombre);
+
+                    if (encontrados.isEmpty()) {
+                        System.out.println("No se encontraron alumnos.");
+                    } else {
+                        for (Alumno a : encontrados) {
+                            System.out.println(a);
+                        }
+                    }
                     break;
                 }
                 case "4": {
+                    System.out.print("Ingresa el nombre del alumno a eliminar: ");
+                    String nombre = scanner.nextLine();
+                    boolean eliminado = gestor.eliminarAlumno(nombre);
+                    if (eliminado) {
+                        System.out.println("Alumno eliminado con éxito.");
+                    } else {
+                        System.out.println("No se encontró al alumno.");
+                    }
                     break;
                 }
                 case "5": {
+                    try {
+                        gestor.guardarDatos();
+                        System.out.println("Datos exportados a XML con éxito.");
+                    } catch (Exception e) {
+                        System.out.println("Error al exportar: " + e.getMessage());
+                    }
                     break;
                 }
                 case "6": {
+                    try {
+                        gestor.cargarDatos();
+                        System.out.println("Datos importados con éxito.");
+                    } catch (Exception e) {
+                        System.out.println("Error al importar: " + e.getMessage());
+                    }
                     break;
                 }
                 case "7": {
+                    gestor.crearCopiaSeguridad();
                     break;
                 }
                 case "8": {
@@ -121,5 +133,21 @@ public class Main {
                 }
             }
         } while (!opcion.equals("8"));
+    }
+
+    private static String validarNombre(Scanner scanner) {
+        String nombre = "";
+        boolean nombreValido = false;
+        do {
+            System.out.print("Introduce el nombre del alumno: ");
+            nombre = scanner.nextLine().trim();
+
+            if (!nombre.isEmpty() && nombre.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                nombreValido = true;
+            } else {
+                System.out.println("Error: El nombre solo puede contener letras y no debe estar vacío.");
+            }
+        } while (!nombreValido);
+        return nombre;
     }
 }
