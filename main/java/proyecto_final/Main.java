@@ -1,6 +1,5 @@
 package proyecto_final;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,9 +10,9 @@ public class Main {
         String opcion = "";
 
         do {
-            System.out.println("===============================");
-            System.out.println("GESTOR DE ALUMNOS");
-            System.out.println("===============================");
+            System.out.println("=================================");
+            System.out.println("|       GESTOR DE ALUMNOS       |");
+            System.out.println("=================================");
             System.out.println("1. Añadir alumno");
             System.out.println("2. Mostrar alumnos");
             System.out.println("3. Buscar alumno");
@@ -28,38 +27,8 @@ public class Main {
             switch (opcion) {
                 case "1": {
                     String nombre = validarNombre(scanner);
-
-                    int edad = 0;
-                    boolean edadValida = false;
-                    do {
-                        System.out.print("Introduce la edad del alumno (8-80): ");
-                        try {
-                            edad = Integer.parseInt(scanner.nextLine().trim());
-                            if (edad >= 8 && edad <= 80) {
-                                edadValida = true;
-                            } else {
-                                System.out.println("Error: La edad debe ser entre 8 y 80 años.");
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Error: Debes introducir un número entero válido.");
-                        }
-                    } while (!edadValida);
-
-                    double nota = 0.0;
-                    boolean notaValida = false;
-                    do {
-                        System.out.print("Introduce la nota del alumno (0-10): ");
-                        try {
-                            nota = Double.parseDouble(scanner.nextLine().trim().replace(',', '.'));
-                            if (nota >= 0.0 && nota <= 10.0) {
-                                notaValida = true;
-                            } else {
-                                System.out.println("Error: La nota debe estar entre 0 y 10.");
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Error: Debes introducir un número válido.");
-                        }
-                    } while (!notaValida);
+                    int edad = validarEdad(scanner);
+                    double nota = validarNota(scanner);
 
                     Alumno nuevoAlumno = new Alumno(nombre, edad, nota);
                     gestor.agregarAlumno(nuevoAlumno);
@@ -92,7 +61,7 @@ public class Main {
                 }
                 case "4": {
                     System.out.print("Ingresa el nombre del alumno a eliminar: ");
-                    String nombre = scanner.nextLine();
+                    String nombre = validarNombre(scanner);
                     boolean eliminado = gestor.eliminarAlumno(nombre);
                     if (eliminado) {
                         System.out.println("Alumno eliminado con éxito.");
@@ -120,7 +89,12 @@ public class Main {
                     break;
                 }
                 case "7": {
-                    gestor.crearCopiaSeguridad();
+                    boolean exito = gestor.crearCopiaSeguridad();
+                    if (exito) {
+                        System.out.println("Copia de seguridad creada con éxito.");
+                    } else {
+                        System.out.println("Error al crear la copia de seguridad.");
+                    }
                     break;
                 }
                 case "8": {
@@ -133,6 +107,44 @@ public class Main {
                 }
             }
         } while (!opcion.equals("8"));
+    }
+
+    private static double validarNota(Scanner scanner) {
+        double nota = 0.0;
+        boolean notaValida = false;
+        do {
+            System.out.print("Introduce la nota del alumno (0-10): ");
+            try {
+                nota = Double.parseDouble(scanner.nextLine().trim().replace(',', '.'));
+                if (nota >= 0.0 && nota <= 10.0) {
+                    notaValida = true;
+                } else {
+                    System.out.println("Error: La nota debe estar entre 0 y 10.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Debes introducir un número válido.");
+            }
+        } while (!notaValida);
+        return nota;
+    }
+
+    private static int validarEdad(Scanner scanner) {
+        int edad = 0;
+        boolean edadValida = false;
+        do {
+            System.out.print("Introduce la edad del alumno (8-80): ");
+            try {
+                edad = Integer.parseInt(scanner.nextLine().trim());
+                if (edad >= 8 && edad <= 80) {
+                    edadValida = true;
+                } else {
+                    System.out.println("Error: La edad debe ser entre 8 y 80 años.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Debes introducir un número entero válido.");
+            }
+        } while (!edadValida);
+        return edad;
     }
 
     private static String validarNombre(Scanner scanner) {

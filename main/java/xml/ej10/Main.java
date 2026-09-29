@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        List<Alumno> alumnos = Alumno.getAlumnos();
+        /*List<Alumno> alumnos = Alumno.getAlumnos();
 
         try {
             DocumentBuilderFactory factory =
@@ -70,7 +70,7 @@ public class Main {
             System.out.println("XML creado");
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            System.out.println("Error al crear el XML: " + e.getMessage());
+        }*/
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GestorAlumnos {
     private List<Alumno> listaAlumnos;
-    private GestorXML gestorXML;
+    private final GestorXML gestorXML;
 
     public GestorAlumnos() {
         this.listaAlumnos = new ArrayList<>();

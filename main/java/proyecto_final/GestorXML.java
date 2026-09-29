@@ -84,10 +84,9 @@ public class GestorXML {
 
         try (BufferedWriter bw = Files.newBufferedWriter(fichero)) {
             for (Alumno alumno : alumnos) {
-                // Escribimos los datos separados por comas o punto y coma
                 bw.write(alumno.getId() + ";" + alumno.getNombre() + ";" +
                         alumno.getEdad() + ";" + alumno.getNota());
-                bw.newLine(); // Salto de línea de tus apuntes
+                bw.newLine();
             }
         }
     }
