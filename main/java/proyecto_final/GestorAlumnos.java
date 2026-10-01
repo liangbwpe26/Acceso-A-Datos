@@ -30,7 +30,7 @@ public class GestorAlumnos {
         String busqueda = nombre.toLowerCase();
 
         for (Alumno alumno : listaAlumnos) {
-            if (alumno.getNombre().toLowerCase().contains(busqueda)) {
+            if (alumno.getNombre().toLowerCase().startsWith(busqueda)) {
                 encontrados.add(alumno);
             }
         }
