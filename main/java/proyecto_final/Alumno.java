@@ -50,7 +50,7 @@ public class Alumno {
     @Override
     public String toString() {
         return
-                "----------------------------------------" +
+                        "----------------------------------------\n" +
                         "ID: " + id + "\n" +
                         "Nombre: " + nombre + "\n" +
                         "Edad: " + edad + "\n" +

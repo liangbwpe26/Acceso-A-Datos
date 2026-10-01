@@ -25,7 +25,8 @@ public class Main {
             opcion = scanner.nextLine();
 
             switch (opcion) {
-                case "1": {
+                case "1":
+                case "01": {
                     String nombre = validarNombre(scanner);
                     int edad = validarEdad(scanner);
                     double nota = validarNota(scanner);
@@ -35,7 +36,8 @@ public class Main {
                     System.out.println("Alumno añadido correctamente.");
                     break;
                 }
-                case "2": {
+                case "2":
+                case "02": {
                     List<Alumno> alumnos = gestor.getTodosLosAlumnos();
                     if (alumnos.isEmpty()) {
                         System.out.println("No hay alumnos registrados.");
@@ -46,7 +48,8 @@ public class Main {
                     }
                     break;
                 }
-                case "3": {
+                case "3":
+                case "03": {
                     String nombre = validarNombre(scanner);
                     List<Alumno> encontrados = gestor.buscarPorNombre(nombre);
 
@@ -59,18 +62,56 @@ public class Main {
                     }
                     break;
                 }
-                case "4": {
-                    System.out.print("Ingresa el nombre del alumno a eliminar: ");
+                case "4":
+                case "04": {
                     String nombre = validarNombre(scanner);
-                    boolean eliminado = gestor.eliminarAlumno(nombre);
-                    if (eliminado) {
-                        System.out.println("Alumno eliminado con éxito.");
+                    List<Alumno> coincidencias = gestor.buscarPorNombre(nombre);
+
+                    if (coincidencias.isEmpty()) {
+                        System.out.println("No se encontró ningún alumno con ese nombre.");
+                        break;
+                    }
+
+                    System.out.println("Alumnos encontrados:");
+                    for (int i = 0; i < coincidencias.size(); i++) {
+                        Alumno a = coincidencias.get(i);
+                        System.out.println((i + 1) + ". " + a.getNombre() + "; Edad: " + a.getEdad() + "; Nota: " + a.getNota());
+                    }
+                    System.out.println("0. Salir");
+
+                    int seleccion = -1;
+                    boolean seleccionValida = false;
+                    do {
+                        System.out.print("Elige el número del alumno a eliminar (0 para salir): ");
+                        try {
+                            seleccion = Integer.parseInt(scanner.nextLine().trim());
+
+                            if (seleccion >= 0 && seleccion <= coincidencias.size()) {
+                                seleccionValida = true;
+                            } else {
+                                System.out.println("Error: Por favor, elige un número de la lista.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error: Debes introducir un número entero.");
+                        }
+                    } while (!seleccionValida);
+
+                    if (seleccion == 0) {
+                        System.out.println("Operación cancelada.");
                     } else {
-                        System.out.println("No se encontró al alumno.");
+                        int idEliminar = coincidencias.get(seleccion - 1).getId();
+                        boolean eliminado = gestor.eliminarAlumnoPorId(idEliminar);
+
+                        if (eliminado) {
+                            System.out.println("Alumno eliminado con éxito.");
+                        } else {
+                            System.out.println("Ocurrió un error al intentar eliminar el alumno.");
+                        }
                     }
                     break;
                 }
-                case "5": {
+                case "5":
+                case "05": {
                     try {
                         gestor.guardarDatos();
                         System.out.println("Datos exportados a XML con éxito.");
@@ -79,7 +120,8 @@ public class Main {
                     }
                     break;
                 }
-                case "6": {
+                case "6":
+                case "06": {
                     try {
                         gestor.cargarDatos();
                         System.out.println("Datos importados con éxito.");
@@ -88,7 +130,8 @@ public class Main {
                     }
                     break;
                 }
-                case "7": {
+                case "7":
+                case "07": {
                     boolean exito = gestor.crearCopiaSeguridad();
                     if (exito) {
                         System.out.println("Copia de seguridad creada con éxito.");
@@ -97,7 +140,8 @@ public class Main {
                     }
                     break;
                 }
-                case "8": {
+                case "8":
+                case "08": {
                     System.out.println("Saliendo del programa...");
                     break;
                 }
@@ -106,7 +150,7 @@ public class Main {
                     break;
                 }
             }
-        } while (!opcion.equals("8"));
+        } while (!opcion.equals("8") && !opcion.equals("08"));
     }
 
     private static double validarNota(Scanner scanner) {

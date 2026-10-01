@@ -8,8 +8,13 @@ public class GestorAlumnos {
     private final GestorXML gestorXML;
 
     public GestorAlumnos() {
-        this.listaAlumnos = new ArrayList<>();
         this.gestorXML = new GestorXML();
+        try {
+            this.listaAlumnos = gestorXML.importarAlumnos();
+        } catch (Exception e) {
+            System.out.println("Error al importar los alumnos desde el archivo XML: " + e.getMessage());
+            this.listaAlumnos = new ArrayList<>();
+        }
     }
 
     public void agregarAlumno(Alumno alumno) {
@@ -22,17 +27,19 @@ public class GestorAlumnos {
 
     public List<Alumno> buscarPorNombre(String nombre) {
         List<Alumno> encontrados = new ArrayList<>();
+        String busqueda = nombre.toLowerCase();
+
         for (Alumno alumno : listaAlumnos) {
-            if (alumno.getNombre().equalsIgnoreCase(nombre)) {
+            if (alumno.getNombre().toLowerCase().contains(busqueda)) {
                 encontrados.add(alumno);
             }
         }
         return encontrados;
     }
 
-    public boolean eliminarAlumno(String nombre) {
+    public boolean eliminarAlumnoPorId(int id) {
         for (int i = 0; i < listaAlumnos.size(); i++) {
-            if (listaAlumnos.get(i).getNombre().equalsIgnoreCase(nombre)) {
+            if (listaAlumnos.get(i).getId() == id) {
                 listaAlumnos.remove(i);
                 return true;
             }
